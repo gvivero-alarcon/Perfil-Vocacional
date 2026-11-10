@@ -10,14 +10,23 @@ st.caption(
 if "milestones" not in st.session_state:
     st.session_state.milestones = []
 
-with st.form(key="milestone_form"):
+with st.form(key="milestone_form", clear_on_submit=True):
     st.subheader("Agregar Nuevo Acontecimiento")
 
     col1, col2 = st.columns(2)
     with col1:
+        # Listado escolar completo desde Pre-kínder hasta 4° Medio
         milestone_period = st.selectbox(
             label="Período o curso escolar:",
             options=[
+                "Pre-kínder",
+                "Kínder",
+                "1° Básico",
+                "2° Básico",
+                "3° Básico",
+                "4° Básico",
+                "5° Básico",
+                "6° Básico",
                 "7° Básico",
                 "8° Básico",
                 "1° Medio",
@@ -25,6 +34,7 @@ with st.form(key="milestone_form"):
                 "3° Medio",
                 "4° Medio",
             ],
+            # index=0,
         )
     with col2:
         milestone_category = st.selectbox(
@@ -44,19 +54,28 @@ with st.form(key="milestone_form"):
     )
 
     milestone_valuation = st.slider(
-        label="Valoración subjetiva (0 = Muy negativa, 10 = Muy positiva):",
+        label="Valoración subjetiva:",
         min_value=0,
         max_value=10,
         value=5,
-        help=(
-            "0: Muy negativa | 5: Intermedia o neutral | 10: Muy positiva. "
-            "Esta puntuación no es una calificación de tus capacidades."
-        ),
+    )
+
+    # Indicación estilizada de la escala de valoración
+    st.markdown(
+        """
+        <div style="padding: 8px 12px; background-color: #f0f2f6; border-radius: 6px; font-size: 13px; color: #31333F; margin-bottom: 10px;">
+            <b>Guía de valoración:</b> 
+            <span style="color: #d32f2f;">0 - Muy negativa</span> &nbsp;|&nbsp; 
+            <span style="color: #6c757d;">5 - Ni positiva ni negativa</span> &nbsp;|&nbsp; 
+            <span style="color: #2e7d32;">10 - Muy positiva</span><br>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     milestone_meaning = st.text_area(
-        label="Significado, aprendizaje o reflexión (recomendado)",
-        placeholder="¿Qué significó este acontecimiento para ti o qué aprendiste?",
+        label="¿Qué significó este acontecimiento para ti o qué aprendiste?",
+        placeholder="Escribe aquí tu reflexión o aprendizaje...",
         height=100,
     )
 
@@ -93,7 +112,57 @@ st.subheader("📋 Listado de Acontecimientos Registrados")
 if not st.session_state.milestones:
     st.info("Aún no has registrado ningún acontecimiento.")
 else:
-    for index, milestone in enumerate(st.session_state.milestones):
+    col_f1, col_f2 = st.columns(2)
+    with col_f1:
+        sort_option = st.selectbox(
+            "Ordenar listado por:",
+            options=[
+                "Cronológico (por orden de período)",
+                "Valoración (Mayor a menor)",
+                "Valoración (Menor a mayor)",
+            ],
+        )
+    with col_f2:
+        filter_category = st.selectbox(
+            label="Filtrar por categoría:",
+            options=["Todas"] + list(set([m["category"] for m in st.session_state.milestones])),
+        )
+
+    display_list = list(st.session_state.milestones)
+
+    if filter_category != "Todas":
+        display_list = [m for m in display_list if m["category"] == filter_category]
+
+    # Diccionario de orden cronológico actualizado con toda la trayectoria escolar
+    period_order = {
+        "Pre-kínder": 0,
+        "Kínder": 1,
+        "1° Básico": 2,
+        "2° Básico": 3,
+        "3° Básico": 4,
+        "4° Básico": 5,
+        "5° Básico": 6,
+        "6° Básico": 7,
+        "7° Básico": 8,
+        "8° Básico": 9,
+        "1° Medio": 10,
+        "2° Medio": 11,
+        "3° Medio": 12,
+        "4° Medio": 13,
+    }
+
+    if "Cronológico" in sort_option:
+        display_list.sort(key=lambda x: period_order.get(x["period"], 99))
+    elif "Mayor a menor" in sort_option:
+        display_list.sort(key=lambda x: x["valuation"], reverse=True)
+    else:
+        display_list.sort(key=lambda x: x["valuation"])
+
+    for milestone in display_list:
+        real_index = next(
+            i for i, m in enumerate(st.session_state.milestones) if m["id"] == milestone["id"]
+        )
+
         with st.container(border=True):
             col_info, col_actions = st.columns([4, 1])
 
@@ -109,5 +178,5 @@ else:
             with col_actions:
                 st.write("")
                 if st.button("🗑️ Eliminar", key=f"del_{milestone['id']}"):
-                    st.session_state.milestones.pop(index)
+                    st.session_state.milestones.pop(real_index)
                     st.rerun()
