@@ -14,7 +14,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import streamlit as st
 
-st.set_page_config(page_title="Mi línea de vida", page_icon="🧭", layout="centered")
+
+
+# st.set_page_config(page_title="Mi línea de vida", page_icon="🧭", layout="centered")
 st.markdown("""<style>
 .stButton>button,.stDownloadButton>button{min-height:3rem;font-size:1.05rem;border-radius:.6rem}
 html{font-size:17px}
