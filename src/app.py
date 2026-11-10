@@ -1,20 +1,67 @@
 import streamlit as st
 from datetime import date
 
-
-# 1. Inicialización del estado global:
+# 1. Inicialización del estado global para todas las secciones
 if "data" not in st.session_state:
     st.session_state.data = {
+        # 1. Datos personales
         "full_name": "",
         "age": 12,
         "date_of_birth": date(2014, 1, 1),
-        "school_grade": "7° Básico"
+        "school_grade": "7° Básico",
+
+        # 2. Contexto familiar y social
+        "household_members": [],
+        "family_structure_description": "",
+        "socioeconomic_bracket": "No especificado",
+        "environment_resources_description": "",
+        "family_involvement_level": "Alto",
+        "family_expectations_description": "",
+
+        # 3. Relación con compañeros y profesores
+        "peer_relationship_level": "No observada / Sin información",
+        "teacher_relationship_level": "No observada / Sin información",
+        "interpersonal_bonds_description": "",
+
+        # 4. Redes de apoyo
+        "internal_school_supports": [],
+        "external_supports": [],
+        "support_networks_description": "",
+
+        # 5. Estilo y ritmo de aprendizaje
+        "work_pace": "Promedio / Estándar",
+        "facilitating_strategies": [],
+        "learning_conditions_description": "",
+
+        # 6. Fortalezas académicas
+        "outstanding_subjects": [],
+        "academic_skills_description": "",
+        "positive_attitudes": [],
+        "attitudes_description": "",
+
+        # 7. Áreas de mejora o dificultades
+        "subjects_needing_support": [],
+        "skill_barriers_description": "",
+        "contextual_barrier_factors": [],
+        "learning_obstacles_description": "",
+
+        # 8. Intereses y motivaciones
+        "enjoyed_activities": [],
+        "activities_description": "",
+        "personal_aspirations_description": "",
+
+        # 9. Logros y metas
+        "recent_achievement_types": [],
+        "recent_achievements_description": "",
+        "short_term_goals_description": "",
+        "medium_term_goals_description": "",
+        "long_term_goals_description": "",
     }
 
 if "milestones" not in st.session_state:
     st.session_state.milestones = []
 
-# 2. Definición de las páginas indicando archivo, título con número e ícono
+# 2. Definición de las páginas
 home_page = st.Page(
     page="pages/00_Inicio.py",
     title="Inicio",
@@ -94,7 +141,7 @@ section_12_page = st.Page(
     icon="📋",
 )
 
-# 2. Configuración del menú de navegación agrupado o lineal
+# 3. Configuración del menú de navegación
 pg = st.navigation(
     {
         "General": [home_page],
@@ -107,15 +154,12 @@ pg = st.navigation(
             section_06_page,
             section_07_page,
             section_08_page,
-            section_09_page
+            section_09_page,
         ],
-        "Línea de vida": [
-            section_10_page,
-            section_11_page
-        ],
-        "Resultados": [section_12_page]
+        "Línea de vida": [section_10_page, section_11_page],
+        "Resultados": [section_12_page],
     }
 )
 
-# 3. Renderizar la página seleccionada
+# 4. Renderizar la página seleccionada
 pg.run()

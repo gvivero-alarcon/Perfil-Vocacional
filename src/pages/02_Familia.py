@@ -1,9 +1,8 @@
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Familia",
-    page_icon="👨‍👩‍👧‍👦"
+    page_icon="👨‍👩‍👧‍👦",
 )
 
 st.header("2. Contexto familiar y social")
@@ -13,6 +12,16 @@ st.caption(
     "expectativas y recursos que pueden influir en la construcción de sus "
     "intereses y decisiones vocacionales."
 )
+
+socio_options = [
+    "No especificado",
+    "Tramo vulnerable / Apoyo estatal",
+    "Ingreso medio-bajo",
+    "Ingreso medio",
+    "Ingreso medio-alto / alto",
+]
+saved_socio = st.session_state.data.get("socioeconomic_bracket", "No especificado")
+socio_index = socio_options.index(saved_socio) if saved_socio in socio_options else 0
 
 with st.form(key="family_context_form"):
 
@@ -33,10 +42,8 @@ with st.form(key="family_context_form"):
                 "Tutor/a legal",
                 "Otro",
             ],
-            help=(
-                "Selecciona todas las personas que viven actualmente "
-                "con el estudiante."
-            ),
+            default=st.session_state.data.get("household_members", []),
+            help="Selecciona todas las personas que viven actualmente con el estudiante.",
         )
 
         family_structure_description = st.text_area(
@@ -46,6 +53,7 @@ with st.form(key="family_context_form"):
                 "activamente en el acompañamiento y desarrollo del "
                 "estudiante, dinámicas familiares relevantes, etc."
             ),
+            value=st.session_state.data.get("family_structure_description", ""),
             height=120,
         )
 
@@ -53,17 +61,9 @@ with st.form(key="family_context_form"):
         st.subheader("Situación Socioeconómica y Recursos")
 
         socioeconomic_bracket = st.selectbox(
-            label=(
-                "Tramo socioeconómico o caracterización del entorno "
-                "(opcional):"
-            ),
-            options=[
-                "No especificado",
-                "Tramo vulnerable / Apoyo estatal",
-                "Ingreso medio-bajo",
-                "Ingreso medio",
-                "Ingreso medio-alto / alto",
-            ],
+            label="Tramo socioeconómico o caracterización del entorno (opcional):",
+            options=socio_options,
+            index=socio_index,
         )
 
         environment_resources_description = st.text_area(
@@ -75,20 +75,17 @@ with st.form(key="family_context_form"):
                 "(ej. acceso a internet, libros, espacio de estudio, red de "
                 "apoyo local)."
             ),
+            value=st.session_state.data.get("environment_resources_description", ""),
             height=130,
         )
-
 
     with st.container(border=True):
         st.subheader("Expectativas Familiares")
 
         family_involvement_level = st.select_slider(
-            label=(
-                "Nivel de involucramiento familiar en proyectos futuros "
-                "del estudiante:"
-            ),
+            label="Nivel de involucramiento familiar en proyectos futuros del estudiante:",
             options=["Muy bajo", "Bajo", "Moderado", "Alto", "Muy alto"],
-            value="Alto",
+            value=st.session_state.data.get("family_involvement_level", "Alto"),
         )
 
         family_expectations_description = st.text_area(
@@ -99,6 +96,18 @@ with st.form(key="family_context_form"):
                 "técnicos/superiores, campos laborales de interés o "
                 "proyectos futuros."
             ),
+            value=st.session_state.data.get("family_expectations_description", ""),
             height=130,
         )
-        
+
+    save_family = st.form_submit_button(label="Guardar", width="content")
+
+if save_family:
+    st.session_state.data["household_members"] = household_members
+    st.session_state.data["family_structure_description"] = family_structure_description
+    st.session_state.data["socioeconomic_bracket"] = socioeconomic_bracket
+    st.session_state.data["environment_resources_description"] = environment_resources_description
+    st.session_state.data["family_involvement_level"] = family_involvement_level
+    st.session_state.data["family_expectations_description"] = family_expectations_description
+    # st.toast("Contexto familiar y social guardado correctamente.")
+    st.switch_page("pages/03_Colegio.py")

@@ -1,9 +1,8 @@
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Intereses",
-    page_icon="🎯"
+    page_icon="🎯",
 )
 
 st.header("8. Intereses y motivaciones")
@@ -29,10 +28,8 @@ with st.form(key="interests_motivations_form"):
                 "Naturaleza, ecología o cuidado de animales",
                 "Juegos de estrategia, lógica o resolución de acertijos",
             ],
-            help=(
-                "Selecciona aquellas actividades que generan mayor "
-                "satisfacción y motivación espontánea en el estudiante."
-            ),
+            default=st.session_state.data.get("enjoyed_activities", []),
+            help="Selecciona aquellas actividades que generan mayor satisfacción y motivación espontánea en el estudiante.",
         )
 
         activities_description = st.text_area(
@@ -42,6 +39,7 @@ with st.form(key="interests_motivations_form"):
                 "o personales que despiertan su curiosidad y cómo se vinculan "
                 "con sus preferencias o futuros intereses vocacionales."
             ),
+            value=st.session_state.data.get("activities_description", ""),
             height=120,
         )
 
@@ -55,5 +53,15 @@ with st.form(key="interests_motivations_form"):
                 "considera significativas para su futuro (sin exigir una "
                 "elección vocacional definitiva o rígida)."
             ),
+            value=st.session_state.data.get("personal_aspirations_description", ""),
             height=130,
         )
+
+    save_intereses = st.form_submit_button(label="Guardar", width="content")
+
+if save_intereses:
+    st.session_state.data["enjoyed_activities"] = enjoyed_activities
+    st.session_state.data["activities_description"] = activities_description
+    st.session_state.data["personal_aspirations_description"] = personal_aspirations_description
+    # st.toast("Intereses y motivaciones guardados correctamente.")
+    st.switch_page("pages/09_Logros.py")

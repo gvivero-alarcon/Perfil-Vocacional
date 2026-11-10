@@ -1,9 +1,8 @@
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Aprendizaje",
-    page_icon="🧠"
+    page_icon="🧠",
 )
 
 st.header("5. Estilo y ritmo de aprendizaje")
@@ -13,7 +12,6 @@ st.caption(
     "necesidades de apoyo en distintas experiencias educativas."
 )
 
-# Nota metodológica para evitar neuromitos
 st.info(
     "💡 **Orientación Pedagógica:** Evitar clasificar al estudiante mediante "
     "estilos de aprendizaje fijos (como categorizaciones rígidas VAK: visual, "
@@ -36,7 +34,7 @@ with st.form(key="learning_style_pace_form"):
                 "Promedio / Estándar",
                 "Rápido / Autónomo",
             ],
-            value="Promedio / Estándar",
+            value=st.session_state.data.get("work_pace", "Promedio / Estándar"),
         )
 
         facilitating_strategies = st.multiselect(
@@ -51,6 +49,7 @@ with st.form(key="learning_style_pace_form"):
                 "Fragmentación de tareas complejas",
                 "Ambientes estructurados con pocas distracciones",
             ],
+            default=st.session_state.data.get("facilitating_strategies", []),
         )
 
         learning_conditions_description = st.text_area(
@@ -60,5 +59,15 @@ with st.form(key="learning_style_pace_form"):
                 "respuesta ante el error, tolerancia a la frustración y "
                 "necesidades específicas de apoyo pedagógico en el aula."
             ),
+            value=st.session_state.data.get("learning_conditions_description", ""),
             height=140,
         )
+
+    save_aprendizaje = st.form_submit_button(label="Guardar", width="content")
+
+if save_aprendizaje:
+    st.session_state.data["work_pace"] = work_pace
+    st.session_state.data["facilitating_strategies"] = facilitating_strategies
+    st.session_state.data["learning_conditions_description"] = learning_conditions_description
+    # st.toast("Estilo y ritmo de aprendizaje guardado correctamente.")
+    st.switch_page("pages/06_Fortalezas.py")

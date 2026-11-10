@@ -4,31 +4,12 @@ st.header("🗓️ Registro de Acontecimientos")
 st.caption(
     "Registra los acontecimientos significativos de tu trayectoria personal "
     "y escolar, así como su valoración subjetiva (de 0 a 10) y el significado "
-    "o aprendizaje asociado[cite: 1]."
+    "o aprendizaje asociado."
 )
 
-# Inicializar la lista de acontecimientos en st.session_state si no existe
 if "milestones" not in st.session_state:
-    st.session_state.milestones = [
-        {
-            "id": 1,
-            "period": "7° Básico",
-            "description": "Ingreso al nuevo colegio y participación en taller de ciencias.",
-            "valuation": 8,
-            "category": "Escolar/Académica",
-            "meaning": "Me sentí acogido y descubrí que me gustaba experimentar.",
-        },
-        {
-            "id": 2,
-            "period": "8° Básico",
-            "description": "Dificultades en matemáticas durante el primer semestre.",
-            "valuation": 3,
-            "category": "Escolar/Académica",
-            "meaning": "Aprendí a pedir ayuda a tiempo y usar nuevas estrategias de estudio.",
-        },
-    ]
+    st.session_state.milestones = []
 
-# Formulario para agregar o editar acontecimientos
 with st.form(key="milestone_form"):
     st.subheader("Agregar Nuevo Acontecimiento")
 
@@ -43,7 +24,6 @@ with st.form(key="milestone_form"):
                 "2° Medio",
                 "3° Medio",
                 "4° Medio",
-                # "Otro período / Edad",
             ],
         )
     with col2:
@@ -70,7 +50,7 @@ with st.form(key="milestone_form"):
         value=5,
         help=(
             "0: Muy negativa | 5: Intermedia o neutral | 10: Muy positiva. "
-            "Esta puntuación no es una calificación de tus capacidades[cite: 1]."
+            "Esta puntuación no es una calificación de tus capacidades."
         ),
     )
 
@@ -82,8 +62,7 @@ with st.form(key="milestone_form"):
 
     submit_milestone = st.form_submit_button(
         label="Agregar Acontecimiento",
-        # use_container_width=True,
-        width="stretch"
+        width="stretch",
     )
 
 if submit_milestone:
@@ -128,7 +107,7 @@ else:
                     st.caption(f"**Reflexión:** {milestone['meaning']}")
 
             with col_actions:
-                st.write("")  # Espaciado
+                st.write("")
                 if st.button("🗑️ Eliminar", key=f"del_{milestone['id']}"):
                     st.session_state.milestones.pop(index)
                     st.rerun()

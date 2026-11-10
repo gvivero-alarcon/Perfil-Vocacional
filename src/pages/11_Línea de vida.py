@@ -8,7 +8,6 @@ st.caption(
     "y la valoración subjetiva asignada (de 0 a 10)."
 )
 
-# Verificar si existen hitos registrados en la sesión
 milestones = st.session_state.get("milestones", [])
 
 if not milestones:
@@ -19,9 +18,6 @@ if not milestones:
 else:
     df_milestones = pd.DataFrame(milestones)
 
-    # ---------------------------------------------------------
-    # Filtro interactivo por categoría
-    # ---------------------------------------------------------
     categories = ["Todas las categorías"] + list(
         df_milestones["category"].unique()
     )
@@ -42,12 +38,10 @@ else:
             "No hay acontecimientos registrados para la categoría seleccionada."
         )
     else:
-        # Preparamos el significado por defecto si está vacío
         df_filtered["clean_meaning"] = df_filtered["meaning"].apply(
             lambda x: x if x else "Sin registro de significado"
         )
 
-        # Gráfico de dispersión utilizando customdata para alimentar el tooltip nativo
         fig = px.scatter(
             df_filtered,
             x="period",
@@ -62,7 +56,6 @@ else:
             title="Secuencia de Acontecimientos y Valoración Subjetiva",
         )
 
-        # Configuración nativa del tooltip limpio, ordenado y sin texto fijo en pantalla
         fig.update_traces(
             marker=dict(size=15, symbol="circle"),
             hovertemplate=(
@@ -74,7 +67,6 @@ else:
             ),
         )
 
-        # Diseño general del gráfico y alineación izquierda nativa del tooltip
         fig.update_layout(
             yaxis=dict(range=[-0.5, 10.5], dtick=1),
             xaxis_title="Período o Etapa",
@@ -84,11 +76,10 @@ else:
                 bgcolor="white",
                 font_size=12,
                 font_family="sans-serif",
-                align="left",  # Alinea el texto a la izquierda de forma nativa
+                align="left",
             ),
         )
 
-        # Mostrar el gráfico interactivo en Streamlit
         st.plotly_chart(fig, width="stretch", theme="streamlit")
 
         st.info(

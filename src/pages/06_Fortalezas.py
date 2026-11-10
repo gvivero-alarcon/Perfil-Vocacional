@@ -1,9 +1,8 @@
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Fortalezas",
-    page_icon="⭐"
+    page_icon="⭐",
 )
 
 st.header("6. Fortalezas académicas")
@@ -31,6 +30,7 @@ with st.form(key="academic_strengths_form"):
                 "Idiomas / Inglés",
                 "Talleres técnicos o vocacionales específicos",
             ],
+            default=st.session_state.data.get("outstanding_subjects", []),
             help="Selecciona las áreas donde el estudiante destaca o muestra mayor facilidad.",
         )
 
@@ -41,6 +41,7 @@ with st.form(key="academic_strengths_form"):
                 "o logros sobresalientes en los que demuestra mayor facilidad, "
                 "participación activa o potencial vocacional."
             ),
+            value=st.session_state.data.get("academic_skills_description", ""),
             height=120,
         )
 
@@ -58,6 +59,7 @@ with st.form(key="academic_strengths_form"):
                 "Capacidad crítica y reflexiva",
                 "Disposición para el trabajo colaborativo",
             ],
+            default=st.session_state.data.get("positive_attitudes", []),
         )
 
         attitudes_description = st.text_area(
@@ -67,5 +69,16 @@ with st.form(key="academic_strengths_form"):
                 "motores para su aprendizaje y de qué manera apoyan su "
                 "proceso de exploración y futuras decisiones vocacionales."
             ),
+            value=st.session_state.data.get("attitudes_description", ""),
             height=130,
         )
+
+    save_fortalezas = st.form_submit_button(label="Guardar", width="content")
+
+if save_fortalezas:
+    st.session_state.data["outstanding_subjects"] = outstanding_subjects
+    st.session_state.data["academic_skills_description"] = academic_skills_description
+    st.session_state.data["positive_attitudes"] = positive_attitudes
+    st.session_state.data["attitudes_description"] = attitudes_description
+    # st.toast("Fortalezas académicas guardadas correctamente.")
+    st.switch_page("pages/07_Debilidades.py")

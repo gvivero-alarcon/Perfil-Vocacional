@@ -1,9 +1,8 @@
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Logros",
-    page_icon="🏆"
+    page_icon="🏆",
 )
 
 st.header("9. Logros y metas")
@@ -15,9 +14,6 @@ st.caption(
 
 with st.form(key="achievements_goals_form"):
 
-    # ---------------------------------------------------------
-    # 9.1 Logros Recientes
-    # ---------------------------------------------------------
     with st.container(border=True):
         st.subheader("Logros Recientes")
 
@@ -30,10 +26,8 @@ with st.form(key="achievements_goals_form"):
                 "Extracurricular (deporte, arte, talleres, competencias)",
                 "Familiar (colaboración y superación de dificultades)",
             ],
-            help=(
-                "Selecciona las áreas donde el estudiante reconoce o "
-                "ha manifestado avances relevantes."
-            ),
+            default=st.session_state.data.get("recent_achievement_types", []),
+            help="Selecciona las áreas donde el estudiante reconoce o ha manifestado avances relevantes.",
         )
 
         recent_achievements_description = st.text_area(
@@ -43,12 +37,10 @@ with st.form(key="achievements_goals_form"):
                 "significativas en el ámbito académico, personal o social, "
                 "y cómo valora su propio progreso."
             ),
+            value=st.session_state.data.get("recent_achievements_description", ""),
             height=120,
         )
 
-    # ---------------------------------------------------------
-    # 9.2 Metas a Corto Plazo
-    # ---------------------------------------------------------
     with st.container(border=True):
         st.subheader("Metas a Corto Plazo")
 
@@ -59,12 +51,10 @@ with st.form(key="achievements_goals_form"):
                 "y las acciones concretas que el estudiante considera necesarias "
                 "para alcanzarlos."
             ),
+            value=st.session_state.data.get("short_term_goals_description", ""),
             height=120,
         )
 
-    # ---------------------------------------------------------
-    # 9.3 Metas a Mediano Plazo
-    # ---------------------------------------------------------
     with st.container(border=True):
         st.subheader("Metas a Mediano Plazo")
 
@@ -76,12 +66,10 @@ with st.form(key="achievements_goals_form"):
                 "primeras decisiones de exploración vocacional e intereses "
                 "ocupacionales)."
             ),
+            value=st.session_state.data.get("medium_term_goals_description", ""),
             height=120,
         )
 
-    # ---------------------------------------------------------
-    # 9.4 Metas a Largo Plazo / Sintesis de Acompañamiento
-    # ---------------------------------------------------------
     with st.container(border=True):
         st.subheader("Metas a Largo Plazo y Apreciación General")
 
@@ -93,5 +81,17 @@ with st.form(key="achievements_goals_form"):
                 "necesidades de acompañamiento pedagógico/orientación y elementos "
                 "que requieren mayor profundización."
             ),
+            value=st.session_state.data.get("long_term_goals_description", ""),
             height=140,
         )
+
+    save_logros = st.form_submit_button(label="Guardar", width="content")
+
+if save_logros:
+    st.session_state.data["recent_achievement_types"] = recent_achievement_types
+    st.session_state.data["recent_achievements_description"] = recent_achievements_description
+    st.session_state.data["short_term_goals_description"] = short_term_goals_description
+    st.session_state.data["medium_term_goals_description"] = medium_term_goals_description
+    st.session_state.data["long_term_goals_description"] = long_term_goals_description
+    # st.toast("Logros y metas guardados correctamente.")
+    st.switch_page("pages/10_Acontecimientos")
